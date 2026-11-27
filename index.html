@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14405a"><meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<title>CardVault</title>
+<style>
+:root{--bg:#f3f5f7;--s:#fff;--t:#16222b;--m:#64727e;--b:#d9e0e6;--p:#14405a;--pt:#fff;--st:#e0a100;--ok:#237a4b;--wn:#b36b00;--er:#b3261e;--r:12px}
+@media(prefers-color-scheme:dark){:root{--bg:#0e161c;--s:#16212a;--t:#e6edf2;--m:#93a3af;--b:#2a3a46;--p:#6cb4d8;--pt:#07202e;--st:#f2b705;--ok:#5cc58b;--wn:#e8a23a;--er:#ff7b72}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--t);padding-top:env(safe-area-inset-top)}
+h2{margin:.5em 0 .4em;font-size:1.4rem;letter-spacing:-.01em}h3{margin:1em 0 .4em;font-size:1.02rem}
+main{max-width:980px;margin:0 auto;padding:12px 14px 100px}
+.m{color:var(--m)}.sm{font-size:.85em}.er{color:var(--er)}.ok{color:var(--ok)}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--s);border-top:1px solid var(--b);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav a{flex:1;text-align:center;padding:7px 2px;color:var(--m);text-decoration:none;font-size:.72rem}
+nav a i{display:block;font-style:normal;font-size:1.3rem;line-height:1.2}nav a.on{color:var(--p);font-weight:600}
+.card,.item,details{background:var(--s);border:1px solid var(--b);border-radius:var(--r)}
+.card{padding:12px;margin:10px 0}a.card{display:block;color:inherit;text-decoration:none}
+.item{display:flex;gap:10px;align-items:center;padding:8px;margin:7px 0;color:inherit;text-decoration:none}
+.item img,.ph{width:58px;height:40px;object-fit:cover;border-radius:6px;flex:none}
+.ph{display:grid;place-items:center;background:var(--b);font-weight:700}
+.im{flex:1;min-width:0}.im>*{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rt{display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.bd{font-size:.7rem;padding:1px 8px;border-radius:99px;background:var(--b);white-space:nowrap}.bd.er{background:var(--er);color:#fff}.bd.w{background:var(--wn);color:#fff}
+.btn{font:inherit;border:1px solid var(--b);background:var(--s);color:var(--t);padding:9px 14px;border-radius:10px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.pri{background:var(--p);color:var(--pt);border-color:var(--p);font-weight:600}.btn.sm{padding:5px 10px;font-size:.85rem}.btn.dng{color:var(--er)}
+:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+input,select,textarea{font:inherit;width:100%;padding:9px;border:1px solid var(--b);border-radius:9px;background:var(--bg);color:var(--t)}
+label{display:block;font-size:.82rem;color:var(--m);margin:8px 0 0}label input,label select,label textarea{margin-top:3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
+.bar{display:flex;gap:8px;margin:8px 0;align-items:center;flex-wrap:wrap}.bar>input,.bar>select{flex:1;min-width:120px;width:auto}
+details{margin:10px 0;padding:0 12px 10px}summary{padding:11px 0;font-weight:600;cursor:pointer}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{margin:0;display:inline-block;position:relative}.chip input{position:absolute;opacity:0;width:0;height:0}
+.chip span{display:inline-block;padding:5px 11px;border:1px solid var(--b);border-radius:99px;color:var(--t);font-size:.85rem;cursor:pointer}
+.chip input:checked+span{background:var(--p);color:var(--pt);border-color:var(--p)}.chip input:focus-visible+span{outline:2px solid var(--p)}
+.gl{font-size:.78rem;color:var(--m);margin:10px 0 4px}
+.w{color:var(--wn);display:block}
+.edg{display:grid;gap:12px}@media(min-width:820px){.edg{grid-template-columns:340px 1fr}.imgs{position:sticky;top:10px;align-self:start}}
+.tile{aspect-ratio:1.7;border:2px dashed var(--b);border-radius:var(--r);display:grid;place-items:center;text-align:center;color:var(--m);overflow:hidden;background:var(--s)}.tile img{width:100%;height:100%;object-fit:contain}
+.tl{margin-bottom:10px}.tl .btn{margin-top:6px;width:100%}
+.sbar{position:sticky;bottom:64px;display:flex;gap:8px;justify-content:flex-end;padding:8px 0;background:var(--bg);grid-column:1/-1}
+.ov{position:fixed;inset:0;background:#0009;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--s);width:100%;max-width:560px;max-height:90vh;overflow:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom));border-radius:18px 18px 0 0}
+.zoom{width:100%;display:block}
+.kv{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--b)}.kv>span{width:108px;flex:none;color:var(--m);font-size:.85rem}.kv>div{flex:1;word-break:break-word;white-space:pre-wrap}
+.li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--b)}
+.ic{border:0;background:none;color:var(--m);font-size:1.1rem;padding:4px 8px;cursor:pointer}
+.st{border:0;background:none;font-size:1.5rem;color:var(--b);cursor:pointer;padding:0 2px}.st.on{color:var(--st)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stats div{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:10px;text-align:center}.stats b{font-size:1.6rem;display:block}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+#toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--t);color:var(--bg);padding:9px 16px;border-radius:99px;z-index:40;display:none;max-width:90%}
+#lock{position:fixed;inset:0;background:var(--bg);z-index:50;display:none;place-items:center;padding:20px}#lock form{width:260px;text-align:center}
+.big{width:100%;padding:16px;font-size:1.1rem}
+</style></head>
+<body>
+<main id="main"></main>
+<nav id="nav"><a href="#today"><i>🏠</i>Today</a><a href="#cards"><i>📇</i>Cards</a><a href="#new"><i>➕</i>Add</a><a href="#co"><i>🏢</i>Companies</a><a href="#more"><i>⚙️</i>More</a></nav>
+<div id="sh"></div><div id="dls"></div><div id="toast"></div>
+<div id="lock"><form data-f="unlock"><h2>CardVault</h2><input id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="Enter PIN"><p><button class="btn pri big">Unlock</button></p></form></div>
+<input type="file" id="pf" accept="image/*" hidden><input type="file" id="af" multiple hidden><input type="file" id="imp" accept=".json" hidden>
+<input type="file" id="qc" accept="image/*" capture="environment" hidden><input type="file" id="qg" accept="image/*" multiple hidden>
+<script>
+const $=(s,e=document)=>e.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const fmt=d=>d?new Date(d+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'';
+const days=d=>Math.round((new Date(d+'T00:00')-new Date(today()+'T00:00'))/864e5);
+const np=p=>(p||'').replace(/\D/g,'').slice(-10);
+const lev=(a,b)=>{const m=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=m[0];m[0]=i;for(let j=1;j<=b.length;j++){const t=m[j];m[j]=Math.min(m[j]+1,m[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return m[b.length]};
+const SVC=[['Taxation',['Income Tax','GST','TDS','Transfer Pricing','International Tax']],['Audit & Assurance',['Statutory Audit','Internal Audit','Tax Audit','Stock Audit']],['Accounting & Compliance',['Bookkeeping','ROC / Company Law','Payroll']],['Advisory',['Valuation','M&A / Due Diligence','Startup Advisory','Financial Planning']],['Industry',['Manufacturing','Trading','Real Estate','IT / Software','Healthcare','Retail']]];
+const DEF={services:SVC.flatMap(([c,a])=>a.map(n=>({c,n}))),categories:['CA / Accountant','Lawyer','Banker','Client','Vendor','Consultant','Business Owner','Other'],meetingTypes:['Conference','Business Meeting','Exhibition','Personal Introduction','Seminar / Workshop','Phone / Online','Other'],me:{},saved:[],pin:'',lastBackup:''};
+const PRIO=['High','Medium','Low'],STAGE=['New','Warm','Trusted','Referral partner'],STAT=['Active','Inactive','Dormant'],ITYPE=['Call','Email','Meeting','WhatsApp','Other'];
+const NOTES=[['discussed','What was discussed'],['interests','Interests / expertise'],['requirements','Business requirements'],['collab','Potential collaboration'],['commitments','Commitments made'],['observations','Important observations'],['remarks','Personal remarks']];
+const blank=()=>({id:uid(),created:Date.now(),updated:Date.now(),name:'',desig:'',company:'',phone:'',phone2:'',email:'',website:'',address:'',city:'',social:'',front:'',back:'',dateMet:today(),event:'',place:'',referredBy:'',organiser:'',meetingType:'',category:'',services:[],tags:[],priority:'Medium',stage:'New',status:'Active',rating:0,lastContact:'',nextFU:'',fuAction:'',notes:{},interactions:[],tasks:[],dates:[],files:[]});
+/* storage */
+let db,cards=[],cfg,cur,F={},S='updated',lastHide=0,QS={event:'',place:'',meetingType:'',dateMet:today(),n:0},shC,dp;
+const open_=()=>new Promise((res,rej)=>{const r=indexedDB.open('cardvault',1);r.onupgradeneeded=()=>{r.result.createObjectStore('cards',{keyPath:'id'});r.result.createObjectStore('kv')};r.onsuccess=()=>{db=r.result;res()};r.onerror=()=>rej(r.error)});
+const st_=(s,m='readonly')=>db.transaction(s,m).objectStore(s),rq=r=>new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const all=()=>rq(st_('cards').getAll()),put=c=>rq(st_('cards','readwrite').put(c)),del=id=>rq(st_('cards','readwrite').delete(id));
+const saveCfg=()=>rq(st_('kv','readwrite').put(JSON.parse(JSON.stringify(cfg)),'cfg'));
+const mut=async(id,fn)=>{const c=cards.find(x=>x.id===id);fn(c);c.updated=Date.now();await put(c);render()};
+const cid=()=>location.hash.split('/')[1];
+/* ui helpers */
+const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',2600)};
+const sheet=h=>{$('#sh').innerHTML=`<div class="ov"><div class="sheet">${h}</div></div>`},closeSheet=()=>$('#sh').innerHTML='';
+const dlf=(n,d,t)=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([d],{type:t}));a.download=n;document.body.appendChild(a);a.click();a.remove()};
+const img2url=f=>new Promise((res,rej)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const s=Math.min(1,1400/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.82))};i.onerror=()=>rej();i.src=u});
+const rd=f=>new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result);x.readAsDataURL(f)});
+const L=(l,n,v,o={})=>`<label>${l}${o.req?' *':''}<input name="${n}" value="${esc(v)}" type="${o.t||'text'}"${o.list?` list="${o.list}"`:''}${o.im?` inputmode="${o.im}"`:''} autocomplete="off"><small class="w" data-w="${n}"></small></label>`;
+const opts=(a,v,blank=true)=>(blank?'<option value=""></option>':'')+a.map(x=>`<option${x===v?' selected':''}>${esc(x)}</option>`).join('');
+const SEL=(l,n,a,v,blank=true)=>`<label>${l}<select name="${n}">${opts(a,v,blank)}</select></label>`;
+const TA=(l,n,v)=>`<label>${l}<textarea name="${n}" rows="2">${esc(v)}</textarea></label>`;
+const chipset=(n,sel=[])=>{const g={};cfg.services.forEach(s=>(g[s.c]??=[]).push(s.n));const k=new Set(cfg.services.map(s=>s.n));sel.filter(x=>!k.has(x)).forEach(x=>(g['Other']??=[]).push(x));return Object.entries(g).map(([c,a])=>`<div class="gl">${esc(c)}</div><div class="chips">${a.map(x=>`<label class="chip"><input type="checkbox" name="${n}" value="${esc(x)}"${sel.includes(x)?' checked':''}><span>${esc(x)}</span></label>`).join('')}</div>`).join('')};
+const uniq=k=>[...new Set(cards.map(c=>c[k]).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+const dls=()=>['city','event','place','referredBy','organiser','company'].map(k=>`<datalist id="dl-${k}">${uniq(k).map(x=>`<option value="${esc(x)}">`).join('')}</datalist>`).join('')+`<datalist id="dl-tag">${[...new Set(cards.flatMap(c=>c.tags||[]))].map(x=>`<option value="${esc(x)}">`).join('')}</datalist><datalist id="dl-cat">${[...new Set(cfg.services.map(s=>s.c))].map(x=>`<option value="${esc(x)}">`).join('')}</datalist>`;
+const item=(c,x='')=>`<a class="item" href="#card/${c.id}">${c.front?`<img src="${c.front}" alt="">`:`<div class="ph">${esc((c.name||'?')[0].toUpperCase())}</div>`}<div class="im"><b>${esc(c.name||'(no name)')}</b>${c.draft?' <span class="bd w">Draft</span>':''}<div class="m">${esc([c.desig,c.company].filter(Boolean).join(' · '))}</div>${x||`<div class="m sm">${esc([c.city,c.event].filter(Boolean).join(' · '))}</div>`}</div><div class="rt">${c.priority==='High'?'<span class="bd er">High</span>':''}${c.nextFU?`<span class="bd${c.nextFU<today()?' er':''}">${fmt(c.nextFU)}</span>`:''}</div></a>`;
+/* validation + duplicates */
+const chk=(k,v)=>{v=(v||'').trim();if(!v)return'';if(k==='phone'||k==='phone2'){const n=v.replace(/\D/g,'').length;if(/[^\d\s+\-().\/]/.test(v))return'Unusual characters in number';if(n<8||n>15)return`${n} digits, please check`}
+ if(k==='email'&&!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v))return'Email format looks wrong';if(k==='website'&&(/\s/.test(v)||!/\.[a-z]{2,}/i.test(v)))return'Website looks wrong';return''};
+function dups(c){const nm=s=>(s||'').toLowerCase().replace(/[^a-z0-9]/g,''),ph=[c.phone,c.phone2].map(np).filter(x=>x.length>=7),r=[];
+ for(const o of cards){if(o.id===c.id)continue;let w='';const op=[o.phone,o.phone2].map(np);
+  if(ph.some(p=>op.includes(p)))w='same phone number';
+  else if(c.email&&o.email&&c.email.toLowerCase()===o.email.toLowerCase())w='same email';
+  else if(nm(c.name)&&nm(c.name)===nm(o.name)&&(!nm(c.company)||!nm(o.company)||lev(nm(c.company),nm(o.company))<=2))w='same name and company';
+  else if(nm(c.name)&&nm(c.company)&&nm(c.company)===nm(o.company)&&lev(nm(c.name),nm(o.name))<=2)w='very similar name, same company';
+  if(w)r.push({o,w})}return r}
+/* filtering */
+const blob=c=>([c.name,c.desig,c.company,c.phone,c.phone2,c.email,c.website,c.address,c.city,c.social,c.event,c.place,c.referredBy,c.organiser,c.category,c.fuAction,(c.services||[]).join(' '),(c.tags||[]).join(' '),Object.values(c.notes||{}).join(' '),(c.interactions||[]).map(i=>i.n).join(' '),(c.tasks||[]).map(i=>i.t).join(' ')].join(' ')+' '+np(c.phone)+' '+np(c.phone2)).toLowerCase();
+function match(c){const f=F;if(f.draft&&!c.draft)return false;
+ if(f.q&&!f.q.toLowerCase().split(/\s+/).every(w=>blob(c).includes(w)))return false;
+ for(const k of['category','priority','stage','status','city','event','meetingType'])if(f[k]&&c[k]!==f[k])return false;
+ if(f.tag&&!(c.tags||[]).includes(f.tag))return false;
+ if(f.svc?.length){const h=f.svc.filter(s=>(c.services||[]).includes(s)).length;if(f.mode==='all'?h!==f.svc.length:!h)return false}
+ if(f.xsvc?.length&&f.xsvc.some(s=>(c.services||[]).includes(s)))return false;
+ if(f.from&&(c.dateMet||'')<f.from)return false;if(f.to&&(!c.dateMet||c.dateMet>f.to))return false;
+ if(f.minR&&+c.rating<+f.minR)return false;
+ if(f.fu==='overdue'&&!(c.nextFU&&c.nextFU<today()))return false;if(f.fu==='today'&&c.nextFU!==today())return false;
+ if(f.fu==='week'&&!(c.nextFU&&days(c.nextFU)>=0&&days(c.nextFU)<=7))return false;if(f.fu==='none'&&c.nextFU)return false;
+ if(f.stale&&c.lastContact&&-days(c.lastContact)<+f.stale)return false;return true}
+const ef=(a,b)=>!a?1:!b?-1:a.localeCompare(b),PR={High:0,Medium:1,Low:2};
+const SORTS={updated:['Recently updated',(a,b)=>b.updated-a.updated],name:['Name A–Z',(a,b)=>a.name.localeCompare(b.name)],company:['Company A–Z',(a,b)=>ef(a.company,b.company)||a.name.localeCompare(b.name)],dateMet:['Date met (newest)',(a,b)=>(b.dateMet||'').localeCompare(a.dateMet||'')],nextFU:['Next follow-up',(a,b)=>ef(a.nextFU,b.nextFU)],priority:['Priority',(a,b)=>PR[a.priority]-PR[b.priority]],rating:['Rating',(a,b)=>b.rating-a.rating]};
+const nF=()=>Object.entries(F).filter(([k,v])=>k!=='q'&&k!=='mode'&&(Array.isArray(v)?v.length:v)).length;
+function drawList(){const r=cards.filter(match).sort(SORTS[S][1]);$('#list').innerHTML=`<p class="m sm">${r.length} of ${cards.length} cards</p>`+(r.map(c=>item(c)).join('')||'<div class="card m">No cards match. Clear the search or filters.</div>')}
+/* views */
+const byFU=(a,b)=>a.nextFU.localeCompare(b.nextFU);
+function vToday(){const t=today(),live=cards.filter(c=>!c.draft),f=live.filter(c=>c.nextFU),od=f.filter(c=>c.nextFU<t).sort(byFU),td=f.filter(c=>c.nextFU===t),wk=f.filter(c=>c.nextFU>t&&days(c.nextFU)<=7).sort(byFU),dr=cards.filter(c=>c.draft);
+ const tk=live.flatMap(c=>(c.tasks||[]).filter(x=>!x.done).map(x=>({c,x}))).sort((a,b)=>(a.x.due||'9').localeCompare(b.x.due||'9'));
+ const sec=(h,a,cl='')=>a.length?`<h3 class="${cl}">${h} (${a.length})</h3>${a.map(c=>item(c,`<div class="m sm">${esc(c.fuAction||'Follow up')}</div>`)).join('')}`:'';
+ const bk=live.length&&(!cfg.lastBackup||-days(cfg.lastBackup)>14)?`<div class="card"><b>Back up your data</b><div class="m">Everything is stored only on this device. Save a backup file regularly.</div><p><button class="btn pri sm" data-a="bk">Download backup</button></p></div>`:'';
+ return `<h2>Today</h2><div class="stats"><div><b class="${od.length?'er':''}">${od.length}</b>Overdue</div><div><b>${td.length}</b>Due today</div><a href="#cards" data-a="drafts" style="color:inherit;text-decoration:none"><b>${dr.length}</b>Drafts</a></div>${bk}`
+ +sec('Overdue follow-ups',od,'er')+sec('Due today',td)+sec('Next 7 days',wk)
+ +(tk.length?`<h3>Pending commitments (${tk.length})</h3>${tk.map(({c,x})=>`<a class="item" href="#card/${c.id}"><div class="im"><b>${esc(x.t)}</b><div class="m sm">${esc(c.name)}${x.due?' · due '+fmt(x.due):''}</div></div>${x.due&&x.due<t?'<span class="bd er">Overdue</span>':''}</a>`).join('')}`:'')
+ +(dr.length?`<h3>Drafts to complete (${dr.length})</h3>${dr.slice(0,5).map(c=>item(c)).join('')}`:'')
+ +(!cards.length?'<div class="card"><b>Welcome</b><p class="m">Tap ➕ Add to photograph your first card. Set a follow-up date on any card and it will appear here.</p></div>':'')}
+function vCards(){return `<h2>Cards</h2><div class="bar"><input id="q" type="search" placeholder="Search name, company, phone, notes…" value="${esc(F.q||'')}"><button class="btn" data-a="filt">Filters${nF()?' ('+nF()+')':''}</button></div><div class="bar"><select id="srt">${Object.entries(SORTS).map(([k,v])=>`<option value="${k}"${k===S?' selected':''}>Sort: ${v[0]}</option>`).join('')}</select>${nF()?'<button class="btn sm" data-a="clrf">Clear filters</button>':''}</div>${cfg.saved.length?`<div class="bar">${cfg.saved.map((s,i)=>`<button class="btn sm" data-a="usef" data-i="${i}">★ ${esc(s.n)}</button>`).join('')}</div>`:''}<div id="list"></div>`}
+function vCo(){const g={};cards.filter(c=>!c.draft).forEach(c=>{const k=(c.company||'No company').trim();(g[k.toLowerCase()]??={n:k,a:[]}).a.push(c)});
+ return `<h2>Companies</h2>`+(Object.values(g).sort((a,b)=>a.n.localeCompare(b.n)).map(x=>`<details><summary>${esc(x.n)} <span class="m">(${x.a.length})</span></summary>${x.a.map(c=>item(c)).join('')}</details>`).join('')||'<div class="card m">Companies appear here as you add cards.</div>')}
+const vNew=()=>`<h2>Add cards</h2><a class="card" href="#edit/new"><b>📇 One card</b><div class="m">Photograph the card, then fill the details while viewing it.</div></a><a class="card" href="#quick"><b>⚡ Quick scan (many cards)</b><div class="m">Snap a batch at an event. Complete each one later from Drafts.</div></a>`;
+function vQuick(){return `<h2>Quick scan</h2><p class="m">These details apply to every card in this session. Capture the cards now, complete them later.</p><form id="qf" class="grid2">${L('Event','event',QS.event,{list:'dl-event'})}${L('Place','place',QS.place,{list:'dl-place'})}${L('Date','dateMet',QS.dateMet,{t:'date'})}${SEL('Meeting type','meetingType',cfg.meetingTypes,QS.meetingType)}</form><p><button class="btn pri big" data-a="qcap">📷 Capture card</button></p><p><button class="btn" data-a="qgal">Add several from gallery</button></p><p><b id="qn">${QS.n}</b> captured this session.</p><a class="btn" href="#cards" data-a="drafts">Done – review drafts</a>`}
+const tiles=()=>['front','back'].map(s=>`<div class="tl"><div class="tile" data-a="zoom" data-s="${s}">${cur[s]?`<img src="${cur[s]}" alt="${s}">`:`<span>📷<br>${s==='front'?'Front':'Back'} of card</span>`}</div><button type="button" class="btn sm" data-a="pick" data-s="${s}">${cur[s]?'Retake '+s:'Add '+s}</button></div>`).join('');
+function vEdit(id){cur=id==='new'?blank():structuredClone(cards.find(c=>c.id===id));if(!cur)return'<p>Card not found.</p>';const c=cur,ex=cards.some(x=>x.id===c.id);
+ return `<h2>${!ex?'New card':c.draft?'Complete draft':'Edit card'}</h2><form id="f" data-f="save" class="edg"><div class="imgs"><div id="tl">${tiles()}</div><p class="m sm">Check every field against the card image. Nothing is guessed or filled in for you.</p></div><div>
+ <details open><summary>Contact</summary><div class="grid2">${L('Name','name',c.name,{req:1})}${L('Designation','desig',c.desig)}${L('Company / firm','company',c.company,{list:'dl-company'})}${SEL('Category','category',cfg.categories,c.category)}${L('Phone','phone',c.phone,{t:'tel',im:'tel'})}${L('Alternate phone','phone2',c.phone2,{t:'tel',im:'tel'})}${L('Email','email',c.email,{t:'email'})}${L('Website','website',c.website,{im:'url'})}${L('City','city',c.city,{list:'dl-city'})}${L('LinkedIn / social link','social',c.social)}</div>${TA('Address','address',c.address)}</details>
+ <details open><summary>Meeting</summary><div class="grid2">${L('Date met','dateMet',c.dateMet,{t:'date'})}${SEL('Meeting type','meetingType',cfg.meetingTypes,c.meetingType)}${L('Event name','event',c.event,{list:'dl-event'})}${L('Place','place',c.place,{list:'dl-place'})}${L('Referred by','referredBy',c.referredBy,{list:'dl-referredBy'})}${L('Organiser','organiser',c.organiser,{list:'dl-organiser'})}</div></details>
+ <details open><summary>Services they provide</summary><div id="svcbox">${chipset('svc',c.services)}</div><div class="bar"><input id="ns" placeholder="New service"><input id="nsc" list="dl-cat" placeholder="Category"><button type="button" class="btn" data-a="addsvc">Add</button></div>${L('Tags (comma separated)','tags',(c.tags||[]).join(', '),{list:'dl-tag'})}</details>
+ <details open><summary>Relationship and follow-up</summary><div class="grid2">${SEL('Priority','priority',PRIO,c.priority,0)}${SEL('Relationship stage','stage',STAGE,c.stage,0)}${SEL('Activity status','status',STAT,c.status,0)}<label>Rating<select name="rating">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${c.rating==n?' selected':''}>${n?'★'.repeat(n):'Not rated'}</option>`).join('')}</select></label>${L('Last contacted','lastContact',c.lastContact,{t:'date'})}${L('Next follow-up date','nextFU',c.nextFU,{t:'date'})}</div>${L('Follow-up action','fuAction',c.fuAction)}</details>
+ <details><summary>Personal notes</summary>${NOTES.map(([k,l])=>TA(l,'n_'+k,c.notes?.[k]||'')).join('')}</details></div>
+ <div class="sbar"><button type="button" class="btn" data-a="back">Cancel</button><button class="btn pri">Save card</button></div></form>`}
+function vCard(id){const c=cards.find(x=>x.id===id);if(!c)return'<p>Card not found.</p>';const t=today();
+ const kv=(l,v,h)=>v?`<div class="kv"><span>${l}</span><div>${h||esc(v)}</div></div>`:'';
+ const tel=p=>p?`<a href="tel:${esc(p.replace(/[^\d+]/g,''))}">${esc(p)}</a>`:'';
+ const url=u=>/^https?:/i.test(u)?u:'https://'+u;
+ const chips=a=>(a||[]).map(x=>`<span class="bd">${esc(x)}</span>`).join(' ');
+ const n=NOTES.filter(([k])=>c.notes?.[k]).map(([k,l])=>kv(l,c.notes[k])).join('');
+ const ints=[...c.interactions].map((x,i)=>({...x,i})).sort((a,b)=>b.d.localeCompare(a.d));
+ return `<p><a href="#cards" class="m">← All cards</a></p>${c.draft?'<div class="card"><b>Draft.</b> <span class="m">Complete the details to save it as a card.</span></div>':''}
+ <div class="grid2" style="gap:8px">${['front','back'].filter(s=>c[s]).map(s=>`<div class="tile" data-a="zoom" data-s="${s}"><img src="${c[s]}" alt="${s}"></div>`).join('')}</div>
+ <h2 style="margin-bottom:0">${esc(c.name)}</h2><div class="m">${esc([c.desig,c.company].filter(Boolean).join(' · '))}</div>
+ <div>${[1,2,3,4,5].map(n=>`<button class="st${n<=c.rating?' on':''}" data-a="rate" data-n="${n}" aria-label="${n} star">★</button>`).join('')}</div>
+ <div>${chips([c.category,c.priority&&c.priority+' priority',c.stage,c.status])}</div>
+ <div class="acts">${c.phone?`<a class="btn sm" href="tel:${esc(c.phone.replace(/[^\d+]/g,''))}">📞 Call</a><a class="btn sm" href="${waLink(c.phone)}" target="_blank" rel="noopener">💬 WhatsApp</a>`:''}${c.email?`<a class="btn sm" href="mailto:${esc(c.email)}">✉️ Email</a>`:''}<button class="btn sm" data-a="share">↗ Share</button><a class="btn sm" href="#edit/${c.id}">✎ Edit</a></div>
+ <div class="card"><b>Follow-up</b><div>${c.nextFU?`<span class="${c.nextFU<t?'er':''}">${fmt(c.nextFU)}${c.nextFU<t?' (overdue)':c.nextFU===t?' (today)':''}</span> — ${esc(c.fuAction||'Follow up')}`:'<span class="m">No follow-up set</span>'}</div>${c.lastContact?`<div class="m sm">Last contacted ${fmt(c.lastContact)}</div>`:''}<p><button class="btn pri sm" data-a="log">Log call / email / meeting</button></p></div>
+ <div class="card">${kv('Phone',c.phone,tel(c.phone))}${kv('Alt. phone',c.phone2,tel(c.phone2))}${kv('Email',c.email,c.email&&`<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`)}${kv('Website',c.website,c.website&&`<a href="${esc(url(c.website))}" target="_blank" rel="noopener">${esc(c.website)}</a>`)}${kv('Social',c.social,c.social&&`<a href="${esc(url(c.social))}" target="_blank" rel="noopener">${esc(c.social)}</a>`)}${kv('Address',c.address)}${kv('City',c.city)}${kv('Date met',fmt(c.dateMet))}${kv('Meeting type',c.meetingType)}${kv('Event',c.event)}${kv('Place',c.place)}${kv('Organiser',c.organiser)}${kv('Referred by',c.referredBy)}${kv('Services',(c.services||[]).length&&'x',chips(c.services))}${kv('Tags',(c.tags||[]).length&&'x',chips(c.tags))}</div>
+ ${n?`<h3>Personal notes</h3><div class="card">${n}</div>`:''}
+ <h3>Commitments</h3><div class="card">${(c.tasks||[]).map((x,i)=>`<div class="li"><label style="margin:0;color:var(--t);display:flex;gap:8px;align-items:center"><input type="checkbox" style="width:auto" data-a="tgl" data-i="${i}"${x.done?' checked':''}><span style="${x.done?'text-decoration:line-through;opacity:.6':''}">${esc(x.t)}${x.due?` <small class="${!x.done&&x.due<t?'er':'m'}">due ${fmt(x.due)}</small>`:''}</span></label><button class="ic" data-a="rmT" data-i="${i}" aria-label="Delete">✕</button></div>`).join('')}<p><button class="btn sm" data-a="addT">+ Add commitment</button></p></div>
+ <h3>Interaction history</h3><div class="card">${ints.map(x=>`<div class="li"><div><b>${esc(x.t)}</b> <span class="m">${fmt(x.d)}</span><div>${esc(x.n)}</div></div><button class="ic" data-a="rmI" data-i="${x.i}" aria-label="Delete">✕</button></div>`).join('')||'<div class="m">Nothing logged yet.</div>'}</div>
+ <h3>Important dates</h3><div class="card">${(c.dates||[]).map((x,i)=>`<div class="li"><span>${esc(x.l)} · ${fmt(x.d)}</span><button class="ic" data-a="rmD" data-i="${i}" aria-label="Delete">✕</button></div>`).join('')}<p><button class="btn sm" data-a="addD">+ Add date</button></p></div>
+ <h3>Attachments</h3><div class="card">${(c.files||[]).map((x,i)=>`<div class="li"><a href="#" data-a="getf" data-i="${i}">📎 ${esc(x.n)}</a><button class="ic" data-a="rmF" data-i="${i}" aria-label="Delete">✕</button></div>`).join('')}<p><button class="btn sm" data-a="addF">+ Attach brochure / document</button></p></div>
+ <p><button class="btn dng sm" data-a="delc">Delete this card</button></p>`}
+const waLink=p=>{let d=p.replace(/\D/g,'');if(d.length===10)d='91'+d;return'https://wa.me/'+d};
+function vMore(){const me=cfg.me||{};return `<h2>More</h2>
+ <details open><summary>My details (for sharing)</summary><form data-f="saveme"><div class="grid2">${L('Name','name',me.name)}${L('Designation','desig',me.desig)}${L('Firm','firm',me.firm)}${L('Phone','phone',me.phone,{t:'tel'})}${L('Email','email',me.email,{t:'email'})}${L('Website','website',me.website)}</div>${TA('Address','address',me.address)}${TA('My services','services',me.services)}<div class="acts"><button class="btn pri sm">Save</button><button type="button" class="btn sm" data-a="shareme">↗ Share my details</button></div></form></details>
+ <details><summary>Master lists</summary><div class="acts"><button class="btn" data-a="lists" data-k="services">Services</button><button class="btn" data-a="lists" data-k="categories">Contact categories</button><button class="btn" data-a="lists" data-k="meetingTypes">Meeting types</button></div></details>
+ <details><summary>Data and backup</summary><p class="m">${cards.length} cards stored on this device. Last backup: ${cfg.lastBackup?fmt(cfg.lastBackup):'never'}.</p><div class="acts"><button class="btn pri" data-a="bk">Download backup (JSON)</button><button class="btn" data-a="imp">Restore from backup</button><button class="btn" data-a="csv">Export to Excel (CSV)</button></div><p class="m sm">Clearing your browser's site data erases everything. Keep backup files in a safe place, such as Google Drive.</p></details>
+ <details><summary>Security</summary><p class="m">${cfg.pin?'PIN lock is on.':'PIN lock is off.'}</p><button class="btn" data-a="pin">${cfg.pin?'Change or remove PIN':'Set PIN'}</button></details>
+ ${dp?'<p><button class="btn pri" data-a="inst">Install app</button></p>':''}<p class="m sm">CardVault works fully offline. No data is sent anywhere.</p>`}
+/* render */
+async function render(){cards=await all();const[h,id]=location.hash.slice(1).split('/'),V={today:vToday,cards:vCards,co:vCo,more:vMore,new:vNew,card:vCard,edit:vEdit,quick:vQuick};
+ $('#main').innerHTML=(V[h]||vToday)(id);const tab={card:'cards',edit:'cards',quick:'new'}[h]||h||'today';
+ document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+tab));$('#dls').innerHTML=dls();if($('#list'))drawList()}
+addEventListener('hashchange',()=>{closeSheet();render();scrollTo(0,0)});
+/* form data */
+function grab(){const f=$('#f');if(!f||!cur)return;const d=new FormData(f),o=Object.fromEntries([...d.entries()].filter(([k])=>k!=='svc'));
+ for(const k of['name','desig','company','category','phone','phone2','email','website','city','social','address','dateMet','meetingType','event','place','referredBy','organiser','priority','stage','status','lastContact','nextFU','fuAction'])cur[k]=(o[k]??'').trim();
+ cur.services=d.getAll('svc');cur.tags=(o.tags||'').split(',').map(s=>s.trim()).filter(Boolean);cur.rating=+o.rating||0;cur.notes={};NOTES.forEach(([k])=>cur.notes[k]=(o['n_'+k]||'').trim())}
+const formF=f=>{const d=new FormData(f),o={q:F.q||''};for(const k of['category','priority','stage','status','city','event','meetingType','tag','from','to','fu','stale','minR','mode']){const v=d.get(k);if(v)o[k]=v}o.svc=d.getAll('svc');o.xsvc=d.getAll('xsvc');if(d.get('draft'))o.draft=1;return o};
+const vcf=c=>{const e=v=>String(v||'').replace(/\n/g,'\\n').replace(/([,;])/g,'\\$1');return['BEGIN:VCARD','VERSION:3.0','FN:'+e(c.name),c.company&&'ORG:'+e(c.company),c.desig&&'TITLE:'+e(c.desig),c.phone&&'TEL;TYPE=CELL:'+e(c.phone),c.phone2&&'TEL;TYPE=WORK:'+e(c.phone2),c.email&&'EMAIL:'+e(c.email),c.website&&'URL:'+e(c.website),c.address&&'ADR;TYPE=WORK:;;'+e(c.address)+';;;;','END:VCARD'].filter(Boolean).join('\r\n')};
+const stxt=c=>[c.name,[c.desig,c.company].filter(Boolean).join(', '),c.phone&&'📞 '+c.phone,c.phone2&&'📞 '+c.phone2,c.email&&'✉️ '+c.email,c.website&&'🌐 '+c.website,c.address,c.extra].filter(Boolean).join('\n');
+async function commit(){cur.draft=false;cur.updated=Date.now();await put(cur);closeSheet();location.hash='#card/'+cur.id}
+const listTitle={services:'Services master list',categories:'Contact categories',meetingTypes:'Meeting types'};
+function listSheet(k){const s=k==='services',it=s?cfg.services.map(x=>x.n):cfg[k];sheet(`<h3>${listTitle[k]}</h3>${it.map((x,i)=>`<div class="li"><span>${esc(x)}${s?` <small class="m">${esc(cfg.services[i].c)}</small>`:''}</span><span><button class="ic" data-a="ren" data-k="${k}" data-i="${i}" aria-label="Rename">✎</button><button class="ic" data-a="rm" data-k="${k}" data-i="${i}" aria-label="Remove">✕</button></span></div>`).join('')}<div class="bar"><input id="nw" placeholder="Add new…">${s?'<input id="nc" list="dl-cat" placeholder="Category">':''}<button class="btn pri" data-a="addl" data-k="${k}">Add</button></div><button class="btn" data-a="close">Done</button>`)}
+/* actions */
+const act={
+ close:closeSheet,back:()=>history.length>1?history.back():location.hash='#cards',
+ drafts:()=>{F={q:'',draft:1}},
+ zoom:a=>{const c=location.hash.startsWith('#edit')?cur:cards.find(x=>x.id===cid()),s=c?.[a.dataset.s];if(s)sheet(`<img class="zoom" src="${s}" alt=""><p><button class="btn" data-a="close">Close</button></p>`)},
+ pick:a=>{const i=$('#pf');i.dataset.side=a.dataset.s;i.click()},
+ addsvc:()=>{const n=$('#ns').value.trim(),c=$('#nsc').value.trim()||'Other';if(!n)return;if(!cfg.services.some(s=>s.n.toLowerCase()===n.toLowerCase()))cfg.services.push({c,n});saveCfg();const sel=[...document.querySelectorAll('input[name=svc]:checked')].map(x=>x.value);if(!sel.includes(n)&&cfg.services.some(s=>s.n===n))sel.push(n);$('#svcbox').innerHTML=chipset('svc',sel);$('#ns').value=''},
+ filt:()=>{const fs=(l,n,a)=>`<label>${l}<select name="${n}">${opts(a,F[n])}</select></label>`;
+  sheet(`<h3>Filters</h3><form data-f="applyf" id="sf"><div class="grid2">${fs('Category','category',cfg.categories)}${fs('Priority','priority',PRIO)}${fs('Relationship stage','stage',STAGE)}${fs('Activity status','status',STAT)}${fs('City','city',uniq('city'))}${fs('Event','event',uniq('event'))}${fs('Meeting type','meetingType',cfg.meetingTypes)}${fs('Tag','tag',[...new Set(cards.flatMap(c=>c.tags||[]))].sort())}<label>Met from<input type="date" name="from" value="${F.from||''}"></label><label>Met until<input type="date" name="to" value="${F.to||''}"></label><label>Follow-up<select name="fu"><option value=""></option>${[['overdue','Overdue'],['today','Due today'],['week','Next 7 days'],['none','None set']].map(([v,l])=>`<option value="${v}"${F.fu===v?' selected':''}>${l}</option>`).join('')}</select></label><label>Not contacted for (days)<input type="number" min="1" name="stale" value="${F.stale||''}" placeholder="e.g. 90"></label><label>Minimum rating<select name="minR"><option value=""></option>${[1,2,3,4,5].map(n=>`<option value="${n}"${F.minR==n?' selected':''}>${n}★ and above</option>`).join('')}</select></label><label style="display:flex;gap:8px;align-items:center;margin-top:24px"><input type="checkbox" name="draft" value="1" style="width:auto"${F.draft?' checked':''}>Drafts only</label></div>
+  <details><summary>Has these services</summary><label>Match<select name="mode"><option value="any">Any of them</option><option value="all"${F.mode==='all'?' selected':''}>All of them</option></select></label>${chipset('svc',F.svc||[])}</details>
+  <details><summary>Does NOT have these services</summary>${chipset('xsvc',F.xsvc||[])}</details>
+  <div class="bar"><button type="button" class="btn" data-a="clrf">Reset</button><button type="button" class="btn" data-a="savef">Save filter…</button><button class="btn pri">Apply</button></div></form>`)},
+ clrf:()=>{F={q:F.q||''};closeSheet();render()},
+ savef:()=>{const n=prompt('Name this filter');if(!n)return;cfg.saved.push({n,f:formF($('#sf'))});saveCfg();F=formF($('#sf'));closeSheet();render();toast('Filter saved')},
+ usef:a=>{F={...cfg.saved[a.dataset.i].f,q:F.q||''};render()},
+ applyf:f=>{F=formF(f);closeSheet();render()},
+ save:async()=>{grab();const c=cur;if(!c.name){toast('Name is required');return}
+  const w=['phone','phone2','email','website'].map(k=>chk(k,c[k])&&`${k}: ${chk(k,c[k])}`).filter(Boolean);
+  if(w.length&&!confirm('Please double-check against the card:\n\n'+w.join('\n')+'\n\nSave anyway?'))return;
+  const d=dups(c);if(d.length){sheet(`<h3>Possible duplicate</h3>${d.map(({o,w})=>`<a class="item" href="#card/${o.id}"><div class="im"><b>${esc(o.name)}</b><div class="m sm">${esc(o.company||'')} · ${w}</div></div></a>`).join('')}<div class="bar"><button class="btn" data-a="close">Go back and edit</button><button class="btn pri" data-a="force">Save anyway</button></div>`);return}
+  await commit()},
+ force:commit,
+ rate:a=>mut(cid(),c=>c.rating=c.rating==a.dataset.n?0:+a.dataset.n),
+ log:()=>{const c=cards.find(x=>x.id===cid());sheet(`<h3>Log interaction</h3><form data-f="logsave"><label>Type<select name="t">${opts(ITYPE,'Call',0)}</select></label><label>Date<input type="date" name="d" value="${today()}" required></label><label>What happened<textarea name="n" rows="3"></textarea></label><label>Next follow-up date (leave empty if none)<input type="date" name="nx" value="${c.nextFU&&c.nextFU>today()?c.nextFU:''}"></label><label>Follow-up action<input name="fa" value="${esc(c.fuAction)}"></label><div class="bar"><button type="button" class="btn" data-a="close">Cancel</button><button class="btn pri">Save</button></div></form>`)},
+ logsave:async f=>{const o=Object.fromEntries(new FormData(f));closeSheet();await mut(cid(),c=>{c.interactions.push({t:o.t,d:o.d,n:o.n.trim()});if(!c.lastContact||o.d>c.lastContact)c.lastContact=o.d;c.nextFU=o.nx||'';c.fuAction=o.nx?o.fa.trim():''});toast('Logged')},
+ addT:()=>sheet(`<h3>Add commitment</h3><form data-f="tsave"><label>What did you promise?<input name="t" required></label><label>Due date<input type="date" name="due"></label><div class="bar"><button type="button" class="btn" data-a="close">Cancel</button><button class="btn pri">Add</button></div></form>`),
+ tsave:async f=>{const o=Object.fromEntries(new FormData(f));closeSheet();await mut(cid(),c=>c.tasks.push({t:o.t.trim(),due:o.due,done:false}))},
+ tgl:a=>mut(cid(),c=>c.tasks[a.dataset.i].done=!c.tasks[a.dataset.i].done),
+ rmT:a=>confirm('Delete this commitment?')&&mut(cid(),c=>c.tasks.splice(a.dataset.i,1)),
+ rmI:a=>confirm('Delete this entry?')&&mut(cid(),c=>c.interactions.splice(a.dataset.i,1)),
+ addD:()=>sheet(`<h3>Add important date</h3><form data-f="dsave"><label>Label (e.g. Birthday)<input name="l" required></label><label>Date<input type="date" name="d" required></label><div class="bar"><button type="button" class="btn" data-a="close">Cancel</button><button class="btn pri">Add</button></div></form>`),
+ dsave:async f=>{const o=Object.fromEntries(new FormData(f));closeSheet();await mut(cid(),c=>c.dates.push({l:o.l.trim(),d:o.d}))},
+ rmD:a=>mut(cid(),c=>c.dates.splice(a.dataset.i,1)),
+ addF:()=>$('#af').click(),
+ getf:a=>{const c=cards.find(x=>x.id===cid()),x=c.files[a.dataset.i],l=document.createElement('a');l.href=x.data;l.download=x.n;document.body.appendChild(l);l.click();l.remove()},
+ rmF:a=>confirm('Remove this attachment?')&&mut(cid(),c=>c.files.splice(a.dataset.i,1)),
+ delc:async()=>{if(!confirm('Delete this card and all its data permanently?'))return;await del(cid());location.hash='#cards'},
+ share:()=>{shC=cards.find(x=>x.id===cid());shSheet()},
+ shareme:()=>{const m=cfg.me||{};shC={name:m.name,desig:m.desig,company:m.firm,phone:m.phone,email:m.email,website:m.website,address:m.address,extra:m.services&&'Services: '+m.services};if(!shC.name){toast('Save your details first');return}shSheet()},
+ sh_text:async()=>{try{await navigator.share({text:stxt(shC)})}catch(e){if(e.name!=='AbortError'){await navigator.clipboard?.writeText(stxt(shC));toast('Copied')}}},
+ sh_wa:()=>open('https://wa.me/?text='+encodeURIComponent(stxt(shC)),'_blank'),
+ sh_copy:async()=>{try{await navigator.clipboard.writeText(stxt(shC));toast('Copied')}catch{toast('Copy not available')}},
+ sh_vcf:async()=>{const n=(shC.name||'contact')+'.vcf',f=new File([vcf(shC)],n,{type:'text/vcard'});if(navigator.canShare?.({files:[f]})){try{await navigator.share({files:[f]});return}catch(e){if(e.name==='AbortError')return}}dlf(n,vcf(shC),'text/vcard')},
+ saveme:async f=>{cfg.me=Object.fromEntries(new FormData(f));await saveCfg();toast('Saved')},
+ lists:a=>listSheet(a.dataset.k),
+ addl:a=>{const k=a.dataset.k,n=$('#nw').value.trim();if(!n)return;if(k==='services'){if(!cfg.services.some(s=>s.n.toLowerCase()===n.toLowerCase()))cfg.services.push({c:$('#nc').value.trim()||'Other',n})}else if(!cfg[k].includes(n))cfg[k].push(n);saveCfg();listSheet(k)},
+ rm:a=>{const k=a.dataset.k;if(!confirm('Remove from the list? Existing cards keep their value.'))return;(k==='services'?cfg.services:cfg[k]).splice(a.dataset.i,1);saveCfg();listSheet(k)},
+ ren:async a=>{const k=a.dataset.k,i=a.dataset.i,s=k==='services',old=s?cfg.services[i].n:cfg[k][i],n=(prompt('Rename to',old)||'').trim();if(!n||n===old)return;
+  if(s)cfg.services[i].n=n;else cfg[k][i]=n;await saveCfg();const fld=s?null:k==='categories'?'category':'meetingType';
+  for(const c of cards){let ch=false;if(s&&c.services.includes(old)){c.services=c.services.map(x=>x===old?n:x);ch=true}if(fld&&c[fld]===old){c[fld]=n;ch=true}if(ch)await put(c)}render();listSheet(k)},
+ bk:async()=>{dlf('cardvault-backup-'+today()+'.json',JSON.stringify({v:1,cfg:{...cfg,pin:''},cards}),'application/json');cfg.lastBackup=today();await saveCfg();render();toast('Backup downloaded')},
+ imp:()=>$('#imp').click(),
+ csv:()=>{const cols=['name','desig','company','category','phone','phone2','email','website','address','city','social','dateMet','event','place','referredBy','organiser','meetingType','services','tags','priority','stage','status','rating','lastContact','nextFU','fuAction'],q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  dlf('cardvault-contacts-'+today()+'.csv','\ufeff'+[cols.concat(NOTES.map(n=>n[1])).map(q).join(','),...cards.map(c=>cols.map(k=>q(Array.isArray(c[k])?c[k].join('; '):c[k])).concat(NOTES.map(([k])=>q(c.notes?.[k]))).join(','))].join('\r\n'),'text/csv')},
+ pin:async()=>{const p=prompt(cfg.pin?'New PIN (4–6 digits). Leave empty to remove the PIN.':'Choose a PIN (4–6 digits). If you forget it, the only way back in is clearing site data, which erases everything. Keep a backup.');if(p===null)return;if(p===''){cfg.pin=''}else if(/^\d{4,6}$/.test(p)){cfg.pin=await sha(p)}else{toast('Use 4–6 digits');return}await saveCfg();render();toast(cfg.pin?'PIN set':'PIN removed')},
+ unlock:async()=>{if(await sha($('#pin').value)===cfg.pin)$('#lock').style.display='none';else{toast('Wrong PIN');$('#pin').value=''}},
+ inst:()=>dp?.prompt(),
+ qcap:()=>{QS={...QS,...Object.fromEntries(new FormData($('#qf')))};$('#qc').click()},
+ qgal:()=>{QS={...QS,...Object.fromEntries(new FormData($('#qf')))};$('#qg').click()}
+};
+const sha=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('cv:'+s)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+const shSheet=()=>sheet(`<h3>Share ${esc(shC.name)}</h3><p class="m sm">Only contact details are shared. Your notes, rating and history stay private.</p><div class="acts" style="flex-direction:column"><button class="btn" data-a="sh_wa">WhatsApp</button><button class="btn" data-a="sh_text">Share as text…</button><button class="btn" data-a="sh_vcf">Share as contact file (vCard)</button><button class="btn" data-a="sh_copy">Copy text</button><button class="btn" data-a="close">Close</button></div>`);
+function lock(){$('#lock').style.display='grid';$('#pin').value='';setTimeout(()=>$('#pin').focus(),50)}
+document.addEventListener('click',e=>{const o=e.target.closest('.ov');if(o&&e.target===o){closeSheet();return}const a=e.target.closest('[data-a]');if(!a)return;if(a.tagName==='A'&&a.getAttribute('href')==='#')e.preventDefault();act[a.dataset.a]?.(a,e)});
+document.addEventListener('submit',e=>{e.preventDefault();act[e.target.dataset.f]?.(e.target)});
+document.addEventListener('input',e=>{const t=e.target;if(t.id==='q'){F.q=t.value;drawList()}else if(t.id==='srt'){S=t.value;drawList()}else if(t.form?.id==='f'){const w=$(`[data-w="${t.name}"]`);if(w)w.textContent=chk(t.name,t.value)}});
+document.addEventListener('change',async e=>{const t=e.target;
+ if(t.id==='pf'&&t.files[0]){try{cur[t.dataset.side]=await img2url(t.files[0]);$('#tl').innerHTML=tiles()}catch{toast('Could not read that image')}t.value=''}
+ else if(t.id==='qc'&&t.files[0]){const c=blank();c.draft=true;c.front=await img2url(t.files[0]);Object.assign(c,{event:QS.event,place:QS.place,dateMet:QS.dateMet,meetingType:QS.meetingType});await put(c);QS.n++;$('#qn').textContent=QS.n;t.value='';toast('Captured')}
+ else if(t.id==='qg'&&t.files.length){for(const f of t.files){const c=blank();c.draft=true;c.front=await img2url(f);Object.assign(c,{event:QS.event,place:QS.place,dateMet:QS.dateMet,meetingType:QS.meetingType});await put(c);QS.n++}$('#qn').textContent=QS.n;t.value='';toast('Added')}
+ else if(t.id==='af'&&t.files.length){const id=cid();for(const f of t.files){if(f.size>8e6&&!confirm(f.name+' is large (over 8 MB). Attach anyway?'))continue;const d=await rd(f);await mut(id,c=>c.files.push({n:f.name,type:f.type,data:d}))}t.value=''}
+ else if(t.id==='imp'&&t.files[0]){try{const j=JSON.parse(await t.files[0].text());if(!Array.isArray(j.cards))throw 0;const have=new Map(cards.map(c=>[c.id,c]));let n=0;for(const c of j.cards){const o=have.get(c.id);if(!o||(c.updated||0)>(o.updated||0)){await put(c);n++}}
+  if(j.cfg&&confirm('Also restore settings (master lists and my details)?')){cfg={...cfg,...j.cfg,pin:cfg.pin};await saveCfg()}toast(n+' cards restored');render()}catch{toast('That is not a valid backup file')}t.value=''}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)lastHide=Date.now();else if(cfg?.pin&&Date.now()-lastHide>6e4)lock()});
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;if(location.hash==='#more')render()});
+(async()=>{try{await open_()}catch{document.body.innerHTML='<p style="padding:20px">Storage is blocked in this browser mode (private browsing?). Open CardVault in a normal browser window.</p>';return}
+ navigator.storage?.persist?.();cfg={...DEF,...((await rq(st_('kv').get('cfg')))||{})};cfg.me=cfg.me||{};cfg.saved=cfg.saved||[];
+ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+ if(cfg.pin)lock();await render()})();
+</script></body></html>
